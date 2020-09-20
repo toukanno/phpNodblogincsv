@@ -1,0 +1,34 @@
+https://www.php.net/manual/ja/function.trim.php
+パスワードをこれで取り出すので使う trim
+
+errormsgはlocationの時に行う
+
+http://blog.kamabokonet.com/2013/06/22/%E3%80%90mysqlphp%E3%80%91auto_increment%E3%81%AE%E6%AC%A1%E5%9B%9E%E5%80%A4%E3%82%92%E5%8F%96%E5%BE%97%E3%81%99%E3%82%8B%E6%96%B9%E6%B3%95/
+
+https://www.php.net/manual/ja/function.exit.php
+exit
+
+https://www.php.net/manual/ja/function.implode.php
+
+https://teratail.com/questions/8887
+
+【PHP】リダイレクト時のメッセージと文字判定
+
+新規登録↑アカウントがあればログイン画面
+↓
+登録内容確認↑戻って修正する
+↓
+top pageへ
+
+ログイン画面
+↓ true false↑　ログイン画面
+toppage
+
+toppage
+↓
+内容編集画面
+
+11:21 整理すればedit.phpも行けた
+
+
+
