@@ -129,6 +129,24 @@ if (!empty($_POST['id2']) && !empty($_POST['textchange'])) {
   fclose($handle);
 }
 
+
+function getLoginUser($session_id) {
+	$handle = fopen("csv/user.csv", "r");
+	while ($line = fgets($handle)) {
+		$column = explode(",",$line);
+		if($session_id == $column[0]){
+			$user["id"] = trim($column[0]);
+			$user["login_id"] = trim($column[1]);
+			$user["name"] = trim($column[2]);
+			//$user["password"] = trim($column[3]);
+			return $user;
+		}
+	}
+	return array();
+}
+$user = getLoginUser($_SESSION['id']);
+
+
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -179,22 +197,22 @@ if (!empty($_POST['id2']) && !empty($_POST['textchange'])) {
   while ($line = fgets($handle)) {
     // $linesっていう配列にexplodeでカンマ区切りを指定して　$lineを区切って代入する
     // while($line = fgets($user)){
-    // $lines = explode(",", $line);
+    $lines = explode(",", $line);
 
     echo "<tr>";
-    echo "<td>" . $users[1] . "</td>";//ここにIDを入れたい
-    echo "<td>" . $users[2] . "</td>";
+    echo "<td>" . getLoginUser($lines[0])["login_id"] . "</td>";
+    echo "<td>" . getLoginUser($lines[0])["name"] . "</td>";
     echo "<td>" . $lines[1] . "</td>";
     echo "<td>" . $lines[2] . "</td>";
     echo '<td>';
     echo '<form action="texttable.php" method="post">';
-    echo '<input type="hidden" value = "' . $lines[0] . '" name= "id">';
+    echo '<input type="hidden" value = "' . $line[0] . '" name= "id">';
     echo '<input type ="submit" name = "destroy" value = "削除" >';
     echo "</form>";
     echo "</td>";
     echo '<td>';
     echo '<form action="textchange.php" method="post">';
-    echo '<input type="hidden" value = "' . $lines[0] . '" name= "id">';
+    echo '<input type="hidden" value = "' . $line[0] . '" name= "id">';
     echo '<input type ="submit" name = "change" value = "変更" >';
     echo "</form>";
     echo "</td>";
