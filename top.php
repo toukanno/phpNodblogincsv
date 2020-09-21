@@ -39,8 +39,8 @@ $user = getLoginUser($_SESSION['id']);
 <body>
   <h1>トップ画面</h1>
   <p><?php echo $_SESSION['name'] ?>さんでログイン中</p>
-  <form action="texttable.php" method="post">
-    <input type="text" name="text">
+  <form action="comment_insert_done.php" method="post">
+    <input type="text" name="comment">
     <input type="submit" value="送信">
     <input type="reset">
   </form>
