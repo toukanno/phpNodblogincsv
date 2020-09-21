@@ -37,10 +37,9 @@ if (!empty($_POST['line_number'])) {
 ?>
 
 <body>
-  <form action="texttable.php" method="post">
-    <input type="hidden" value="change" name="action">
-    <input type="hidden" value="<?php echo $id; ?>" name="id2">
-    <input type="text" name="textchange" value="<?php echo $placeholder; ?>">
+  <form action="comment_change_done.php" method="post">
+    <input type="hidden" value="<?php echo $_POST['line_number']; ?>" name="line_number">
+    <input type="text" name="comment" value="<?php echo $placeholder; ?>">
     <input type="submit" value="送信">
     <input type="reset">
   </form>
