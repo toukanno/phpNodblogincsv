@@ -23,25 +23,26 @@ if (!empty($_POST['userid']) && !empty($_POST['password'])) {
 		$passwords[] = $users[3];
 	}
 	fclose($user);
-	if (in_array($userid, $ids)) {
-		$user = fopen("csv/user.csv", "r");
-		while ($line = fgets($user)) {
-			$users = explode(",", $line);
-			if ($users[1] == $userid && trim($users[3]) == $password) {
-				$_SESSION['id'] = $users[0];
-				$_SESSION['name'] = trim($users[2]);
-				$t = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
-				break;
-			} else {
-				// パスワードが違います
-				$e = "ログイン失敗";
-			}
-		}
-		fclose($user);
-	} else {
-		// IDが違います
+	if (! in_array($userid, $ids)) {
 		$e = "ログイン失敗";
 	}
+	// ログイン認証
+	$user = fopen("csv/user.csv", "r");
+	while ($line = fgets($user)) {
+		$users = explode(",", $line);
+		if ($users[1] == $userid && trim($users[3]) == $password) {
+			$_SESSION['id'] = $users[0];
+			$_SESSION['name'] = trim($users[2]);
+			$t = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
+			break;
+		}
+	}
+	if ($t == "") {
+		// パスワードが違います
+		$e = "ログイン失敗";
+	}
+	fclose($user);
+	// IDが違います
 }
 
 ?>
