@@ -21,19 +21,15 @@ if (!empty($_POST['userid']) && !empty($_POST['name']) && !empty($_POST['passwor
 
 		$id = file("csv/id.csv");
 		$id[0] += 1;
-		// fwrite()
-		print_r($id);
 		$idscsv = fopen("csv/ids.csv","a");
 		fwrite($idscsv,$id[0]."\n");
 		fclose($idscsv);
-		// $user = fopen("csv/user.csv", "a");
 		$user = fopen("csv/user.csv", "r");
 		$value = array();
 		while ($line = fgets($user)) {
 			$lines = explode(",", $line);
 			$value[] = $line;
 		}
-		// fwrite($user,$id[0].",". $userid . "," . $name . "," . $password . "\n");
 		$textcontent = implode(",", array($id[0], $userid, $name, $password. "\n"));
 		$value[] = $textcontent;
 		$user = fopen("csv/user.csv", "w");
@@ -51,7 +47,7 @@ if (!empty($_POST['userid']) && !empty($_POST['name']) && !empty($_POST['passwor
 				$_SESSION['id'] = $users[0];
 				$_SESSION['name'] = trim($users[2]);
 				$t1 = "登録が完了しました。";
-				$t2 = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
+				$t2 = "<a href='top.php'>トップページへ</a>";
 			}
 		}
 	} else {
@@ -66,21 +62,20 @@ if (!empty($_POST['userid']) && !empty($_POST['name']) && !empty($_POST['passwor
 <body>
 
 	<?php if ($e) { ?>
-	<div class="alert alert-danger" role="alert"><?php echo $e; ?></div>
+		<div class="alert alert-danger" role="alert"><?php echo $e; ?></div>
+		<?php die(); ?>
 	<?php } ?>
 
 	<?php if ($t1) { ?>
 	<div class="alert alert-primary" role="alert"><?php echo $t1; ?></div>
 	<?php } ?>
 
-	<?php if ($t2) { ?>
-	<div class="alert alert-primary" role="alert"><?php echo $t2; ?></div>
-	<?php } ?>
-
-	<?php if ($e == "") { ?>
 	<h2>会員登録 確認</h2>
 	<p>以下内容で登録しました。</p>
-	<div> ユーザID : <?php echo $_POST['userid']; ?> </div>
-	<div> 名前 : <?php echo $_POST['name']; ?> </div>
-	<div> パスワード : <?php echo $_POST['password']; ?> </div>
+	<div> <label style="width:5em;">ユーザID</label> : <?php echo $_POST['userid']; ?> </div>
+	<div> <label style="width:5em;">名前</label> : <?php echo $_POST['name']; ?> </div>
+	<div> <label style="width:5em;">パスワード</label> : <?php echo $_POST['password']; ?> </div>
+
+	<?php if ($t2) { ?>
+	<?php echo $t2; ?>
 	<?php } ?>

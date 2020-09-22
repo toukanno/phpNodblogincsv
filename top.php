@@ -32,7 +32,7 @@ $user = getLoginUser($_SESSION['id']);
 
 <div class="container">
 
-  <h1>トップ画面</h1>
+  <h1>トップページ</h1>
   <div style="text-align:right;">
 	  <?php echo $_SESSION['name'] ?>さんでログイン中
 	  <a href="edit.php">[ユーザー情報編集]</a>
@@ -56,10 +56,10 @@ $user = getLoginUser($_SESSION['id']);
   echo "<table class='table'>
   <thead class='thead-light'>
     <tr>
-    <th>ID</th>
-    <th>名前</th>
-    <th>内容</th>
-    <th>日付</th>
+    <th>ログインID</th>
+    <th>ユーザー名</th>
+    <th>コメント</th>
+    <th>投稿日</th>
     <th></th>
     <th></th>
     </tr>

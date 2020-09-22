@@ -76,7 +76,7 @@ if (!empty($_POST['userid2']) && !empty($_POST['name2']) && !empty($_POST['passw
 
   <div style="text-align:center;">
 	  <a href="top.php">[トップページ]</a>
-	  <a href="delete.php">[退会処理]</a>
+	  <a href="delete.php" style="margin-left:6em;">[退会処理]</a>
   </div>
 
   <form action="edit.php" method="post">
