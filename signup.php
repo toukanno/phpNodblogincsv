@@ -1,33 +1,29 @@
 <?php
+require_once("func/header.php");
+
 session_start();
 $e = "";
 ?>
 <!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>内容確認</title>
-</head>
+<title>会員登録</title>
 
 <body>
+
+<div class="container">
+
+  <h1>会員登録</h1>
+  <div class="row">
+
   <form action="signup_done.php" method="post">
     <p style="color:red"><?php echo $e ?></p>
-    <lavel>USERID</lavel><br>
-    <input type="text" name="userid">
-    <br>
-    <lavel>名前</lavel>
-    </lavel><br>
-    <input type="text" name="name">
-    <br>
-    <lavel>パスワード</lavel><br>
-    <input type="password" name="password">
-
-    <br><input type="submit" value="登録">
-    <br><input type="reset">
+    <label>ログインID</label> <input type="text" name="userid"> <br>
+    <label style="width:5em;">名前</label> <input type="text" name="name"> <br>
+    <label>パスワード</label> <input type="password" name="password"> <br>
+    <input type="submit" value="登録" class="btn btn-primary">
   </form>
-  <a href="login.php">IDをお持ちの方はこちらから</a>
-</body>
+  </div>
+</div>
 
-</html>
+<div style="margin-top: 3em;">
+<a href="login.php">ログインIDをお持ちの方はこちらから</a>
+</div>
