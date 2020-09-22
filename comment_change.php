@@ -1,4 +1,6 @@
 <?php
+require_once("func/header.php");
+
 session_start();
 // // // ログイン済みかを確認
 if(!isset($_SESSION['id'])){
@@ -22,26 +24,17 @@ if (!empty($_POST['line_number'])) {
 }
 ?>
 
-
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>内容変更</title>
-</head>
-<?php
-
-
-?>
-
+<title>コメント編集</title>
 <body>
+
+<div class="container">
+
+  <h1>コメント編集</h1>
+
   <form action="comment_change_done.php" method="post">
-    <input type="hidden" value="<?php echo $_POST['line_number']; ?>" name="line_number">
     <input type="text" name="comment" value="<?php echo $placeholder; ?>">
-    <input type="submit" value="送信">
-    <input type="reset">
+    <input type="submit" value="保存" class="btn btn-primary">
+    <input type="hidden" value="<?php echo $_POST['line_number']; ?>" name="line_number">
   </form>
 </body>
 
