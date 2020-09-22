@@ -1,6 +1,9 @@
 <?php
+require_once("func/header.php");
+
 //ログインするための画面
 $e = "";
+$t = "";
 session_start();
 
 //ログイン済みかを確認
@@ -27,36 +30,30 @@ if (!empty($_POST['userid']) && !empty($_POST['password'])) {
 			if ($users[1] == $userid && trim($users[3]) == $password) {
 				$_SESSION['id'] = $users[0];
 				$_SESSION['name'] = trim($users[2]);
-				$e = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
+				$t = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
 				break;
 			} else {
 				// パスワードが違います
-				$e = "<a href='login.php' style = 'color:red'>ログイン失敗</a>";
+				$e = "ログイン失敗";
 			}
 		}
 		fclose($user);
 	} else {
 		// IDが違います
-		$e = "<a href='login.php' style = 'color:red'>ログイン失敗</a>";
+		$e = "ログイン失敗";
 	}
 }
 
-
 ?>
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="refresh" content="1;URL=top.php">
-	<title>Document</title>
-</head>
-<body>
-	<?php echo $e; ?>
-	<form action="top.php" method="post">
-		<input type="hidden" value="<?php echo $_POST['userid']; ?>" name="name">
-		<input type="hidden" value="<?php echo $_POST['name']; ?>" name="mail">
-		<input type="hidden" value="<?php echo $_POST['password']; ?>" name="password">
-	</form>
-</body>
-</html>
+<title>ログイン</title>
+
+<?php if ($e) { ?>
+<div class="alert alert-danger" role="alert"><?php echo $e; ?></div>
+<meta http-equiv="refresh" content="1;URL=login.php">
+<?php } ?>
+
+<?php if ($t) { ?>
+<div class="alert alert-primary" role="alert"><?php echo $t; ?></div>
+<meta http-equiv="refresh" content="1;URL=top.php">
+<?php } ?>
+
