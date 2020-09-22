@@ -30,7 +30,9 @@ if (!empty($_POST['userid']) && !empty($_POST['password'])) {
 	$user = fopen("csv/user.csv", "r");
 	while ($line = fgets($user)) {
 		$users = explode(",", $line);
+		// IDとパスワードで一致した場合
 		if ($users[1] == $userid && trim($users[3]) == $password) {
+			// ログイン成功とする
 			$_SESSION['id'] = $users[0];
 			$_SESSION['name'] = trim($users[2]);
 			$t = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
@@ -38,11 +40,10 @@ if (!empty($_POST['userid']) && !empty($_POST['password'])) {
 		}
 	}
 	if ($t == "") {
-		// パスワードが違います
+		// IDかパスワードが違う
 		$e = "ログイン失敗";
 	}
 	fclose($user);
-	// IDが違います
 }
 
 ?>
