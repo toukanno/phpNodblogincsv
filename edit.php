@@ -47,14 +47,17 @@ if (!empty($_POST['userid2']) && !empty($_POST['name2']) && !empty($_POST['passw
 	}
 	fclose($user);
 
-	$handle = fopen("csv/user.csv", "w");
+	// エラーがなければ保存
+	if ($e == "") {
+		$handle = fopen("csv/user.csv", "w");
 
-	foreach ($value as $val) {
-		fwrite($handle, $val);
+		foreach ($value as $val) {
+			fwrite($handle, $val);
+		}
+		fclose($handle);
+		$_SESSION['name'] = $name;
+		$t = "内容を編集しました";
 	}
-	fclose($handle);
-	$_SESSION['name'] = $name;
-	$t = "内容を編集しました";
 }
 
 
