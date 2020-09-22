@@ -81,7 +81,6 @@ $user = getLoginUser($_SESSION['id']);
 
     // 自分のアカウントの情報以外はスキップ
     $id = $lines[0];
-    if ($id != $_SESSION["id"]) continue;
     $login_id = getLoginUser($id)["login_id"];
     $name = getLoginUser($id)["name"];
     $comment = $lines[1];
@@ -93,16 +92,20 @@ $user = getLoginUser($_SESSION['id']);
     echo "<td>" . $comment . "</td>";
     echo "<td>" . $datetime . "</td>";
     echo '<td>';
-    echo '<form action="comment_delete_done.php" method="post" onClick="return confirm(\'削除しますか？\');">';
-    echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
-    echo '  <input type ="submit" name = "destroy" value = "削除" >';
-    echo "</form>";
+    if ($id == $_SESSION["id"]) {
+	    echo '<form action="comment_delete_done.php" method="post" onClick="return confirm(\'削除しますか？\');">';
+	    echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
+	    echo '  <input type ="submit" name = "destroy" value = "削除" >';
+	    echo "</form>";
+    }
     echo "</td>";
     echo '<td>';
-    echo '<form action="comment_change.php" method="post">';
-    echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
-    echo '  <input type ="submit" name = "change" value = "変更" >';
-    echo "</form>";
+    if ($id == $_SESSION["id"]) {
+	    echo '<form action="comment_change.php" method="post">';
+	    echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
+	    echo '  <input type ="submit" name = "change" value = "変更" >';
+	    echo "</form>";
+    }
     echo "</td>";
     echo "</tr>";
   
