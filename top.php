@@ -14,7 +14,7 @@ if(!isset($_SESSION['id'])){
 function getLoginUser($session_id) {
 	$handle = fopen("csv/user.csv", "r");
 	while ($line = fgets($handle)) {
-		$column = explode(",",$line);
+		$column = explode(",", $line);
 		if($session_id != $column[0]){
 			continue;
 		}
@@ -23,7 +23,7 @@ function getLoginUser($session_id) {
 		$user["name"] = trim($column[2]);
 		return $user;
 	}
-	return array();
+	return false;
 }
 $user = getLoginUser($_SESSION['id']);
 ?>
@@ -74,43 +74,50 @@ $user = getLoginUser($_SESSION['id']);
 
   // 自分自身のCSVの内容を表示
   while ($line = fgets($handle)) {
-    $line_number++;
-    // $linesっていう配列にexplodeでカンマ区切りを指定して　$lineを区切って代入する
-    $lines = explode(",", $line);
+	  $line_number++;
+	  // 削除したコメントは非表示にする。-から始まるものが削除されたコメント。
+	  if (preg_match("/^-/", $line)) {
+		  continue;
+	  }
+	  // $linesっていう配列にexplodeでカンマ区切りを指定して　$lineを区切って代入する
+	  $lines = explode(",", $line);
 
-    // 自分のアカウントの情報以外はスキップ
-    $id = $lines[0];
-    $login_id = getLoginUser($id)["login_id"];
-    $name = getLoginUser($id)["name"];
-    $comment = $lines[1];
-    $datetime = $lines[2];
+	  $id = $lines[0];
+	  $login_id = "-";
+	  $name = "-";
+	  if (getLoginUser($id)) {
+		  $login_id = getLoginUser($id)["login_id"];
+		  $name = getLoginUser($id)["name"];
+	  }
+	  $comment = $lines[1];
+	  $datetime = $lines[2];
 
-    echo "<tr>";
-    echo "<td>" . $login_id . "</td>";
-    echo "<td>" . $name . "</td>";
-    echo "<td>" . $comment . "</td>";
-    echo "<td>" . $datetime . "</td>";
+	  echo "<tr>";
+	  echo "<td>" . $login_id . "</td>";
+	  echo "<td>" . $name . "</td>";
+	  echo "<td>" . $comment . "</td>";
+	  echo "<td>" . $datetime . "</td>";
 
-    echo '<td>';
-    if ($id == $_SESSION["id"]) {
-	    echo '<form action="comment_change.php" method="post">';
-	    echo '  <input type="hidden" value="' . $line_number . '" name= "line_number">';
-	    echo '  <input type="submit" class="btn btn-success" value="変更" >';
-	    echo "</form>";
-    }
-    echo "</td>";
+	  echo '<td>';
+	  if ($id == $_SESSION["id"]) {
+		  echo '<form action="comment_change.php" method="post">';
+		  echo '  <input type="hidden" value="' . $line_number . '" name= "line_number">';
+		  echo '  <input type="submit" class="btn btn-success" value="変更" >';
+		  echo "</form>";
+	  }
+	  echo "</td>";
 
-    echo '<td>';
-    if ($id == $_SESSION["id"]) {
-	    echo '<form action="comment_delete_done.php" method="post" onClick="return confirm(\'削除しますか？\');">';
-	    echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
-	    echo '  <input type="submit" class="btn btn-danger" value="削除" >';
-	    echo "</form>";
-    }
-    echo "</td>";
+	  echo '<td>';
+	  if ($id == $_SESSION["id"]) {
+		  echo '<form action="comment_delete_done.php" method="post" onClick="return confirm(\'削除しますか？\');">';
+		  echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
+		  echo '  <input type="submit" class="btn btn-danger" value="削除" >';
+		  echo "</form>";
+	  }
+	  echo "</td>";
 
-    echo "</tr>";
-  
+	  echo "</tr>";
+
   }
   echo "</table>";
 
