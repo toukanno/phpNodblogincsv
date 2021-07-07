@@ -1,205 +1,123 @@
 <?php
+require_once("func/header.php");
+
 //ログインしたメンバーのみがアクセスできる初期画面
 //ここでtext2.csvユーザ情報を編集させる
 session_start();
-print_r($_SESSION['id']);
-print_r($_SESSION['name']);
 // // // ログイン済みかを確認
 if(!isset($_SESSION['id'])){
-
-  header('Location: login.php');
-  exit;
-}
-// print_r($_SESSOIN['id']);
-// print_r($_SESSOIN['name']);
-$user = fopen("csv/user.csv","r");
-$value = array();
-$userid = "";
-$name = "";
-$password = "";
-while($line = fgets($user)) {
-  $users = explode(",",$line);
-  if($_SESSION['id'] == $users[0]){
-    $userid = trim($users[1]);
-    $name = trim($users[2]);
-    $password = trim($users[3]);
-  }
-}
-fclose($user);
-
-
-
-
-if (!empty($_POST['text'])) {
-  $datetime = date('Y-m-d H:m:s');
-  $handle = fopen("csv/text.csv", "r");
-
-  while ($line4 = fgets($handle)) {
-    $lines4 = explode(",", $line4);
-    // print_r($line4);
-    $rands[] = $lines4[0];
-  }
-  fclose($handle);
-  // fclose($handle);
-
-  $min = 1;
-  $max = 9;
-  // $count =1;
-  if (empty($tmp)) {
-    $tmp = mt_rand($min, $max);
-  }
-  // $id = 0;
-
-  while (true) {
-
-    // print_r($rands);
-    if (!in_array($tmp, $rands)) {
-      $id = $tmp;
-      // $count++;
-      break;
-    } elseif (in_array($tmp, $rands)) {
-      $tmp = mt_rand($min, $max);
-    }
-  }
-  // print_r($rands);
-
-  $handle = fopen("csv/text.csv", "a");
-  // ファイルへ書き込み
-  fwrite($handle, $id . "," . $_POST['text'] . ",");
-  fwrite($handle, $datetime . "\n");
-
-  fclose($handle);
-}
-if (!empty($_POST['id'])) {
-
-
-  $handle = fopen("csv/text.csv", "r");
-
-  $value = array();
-  while ($line2 = fgets($handle)) {
-    $lines = explode(",", $line2);
-
-    if ($lines[0] != $_POST['id']) {
-      var_dump($lines[0]);
-      $value[] = $line2;
-    }
-  }
-
-  fclose($handle);
-
-  $handle = fopen("csv/text.csv", "w");
-  foreach ($value as $val) {
-    fwrite($handle, $val);
-  }
-
-  fclose($handle);
-}
-if (!empty($_POST['id2']) && !empty($_POST['textchange'])) {
-  $id2 = $_POST['id2'];
-  $textchange = $_POST['textchange'];
-  $datetime2 = date('Y-m-d H:m:s');
-  $textcontent = $id2 . "," . $textchange . "," . $datetime2 . "\n";
-  print_r($textcontent);
-
-  $handle = fopen("csv/text.csv", "r");
-  $value2 = array();
-  while ($line3 = fgets($handle)) {
-    $lines3 = explode(",", $line3);
-
-    if ($lines3[0] != $id2) {
-
-      $value2[] = $line3;
-
-      var_dump(($lines3[0]));
-    } elseif ($lines3[0] == $id2) {
-
-      $value2[$id2] = $textcontent;
-    }
-  }
-
-  fclose($handle);
-  $handle = fopen("csv/text.csv", "w");
-
-  foreach ($value2 as $val) {
-
-
-    fwrite($handle, $val);
-  }
-
-  fclose($handle);
+	header('Location: login.php');
+	exit;
 }
 
+
+function getLoginUser($session_id) {
+	$handle = fopen("csv/user.csv", "r");
+	while ($line = fgets($handle)) {
+		$column = explode(",", $line);
+		if($session_id != $column[0]){
+			continue;
+		}
+		$user["id"] = trim($column[0]);
+		$user["login_id"] = trim($column[1]);
+		$user["name"] = trim($column[2]);
+		return $user;
+	}
+	return false;
+}
+$user = getLoginUser($_SESSION['id']);
 ?>
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>テキストテーブル</title>
-</head>
-
+<title>テキストテーブル</title>
 <body>
-  <h1>トップ画面</h1>
-  <p><?php echo $_SESSION['name'] ?>さんでログイン中</p>
-  <form action="texttable.php" method="post">
-    <input type="text" name="text">
-    <input type="submit" value="送信">
-    <input type="reset">
-  </form>
-  <form action="logout.php" method="post">
-    <input type="submit" name="logout" value="ログアウト">
-  </form>
-  <form action="edit.php" method="post">
-    <input type="hidden" name="userid" value="<?php echo $userid; ?>">
-    <input type="hidden" name="name" value="<?php echo $name; ?>">
-    <input type="hidden" name="password" value="<?php echo $password; ?>">
-    <input type="submit"  value="ユーザ情報編集">
-  </form>
 
+<div class="container">
+
+  <h1>トップページ</h1>
+  <div style="text-align:right;">
+	  <?php echo $_SESSION['name'] ?>さんでログイン中
+	  <a href="edit.php">[ユーザー情報編集]</a>
+	  <a href="logout.php">[ログアウト]</a>
+  </div>
+
+  <div class="row">
+    <form action="comment_insert_done.php" method="post">
+      コメント 
+      <input type="text" name="comment">
+      <input type="submit" value="投稿" class="btn btn-primary">
+    </form>
+  </div>
+  
+  <div class="row">
   <?php
-
   //読み取り専用でファイルを開く
   $handle = fopen("csv/text.csv", "r");
-  // $user = fopen("csv/user.csv","r");
+
   //  テーブルのHTMLを生成
-  echo "<table border = 1>
+  echo "<table class='table'>
+  <thead class='thead-light'>
     <tr>
-    <th>ID</th>
-    <th>名前</th>
-    <th>内容</th>
-    <th>日付</th>
+    <th>ログインID</th>
+    <th>ユーザー名</th>
+    <th>コメント</th>
+    <th>投稿日</th>
     <th></th>
     <th></th>
-    </tr>";
+    </tr>
+  </thead>
+  ";
 
   //  csvのデータを配列に変換し、HTMLに埋め込んでいる
   //fgetで値を一行ずつ取得する
   
-  while ($line = fgets($handle)) {
-    // $linesっていう配列にexplodeでカンマ区切りを指定して　$lineを区切って代入する
-    // while($line = fgets($user)){
-    // $lines = explode(",", $line);
+  // 主キー UPDATE / DELETE用
+  $line_number = 0;
 
-    echo "<tr>";
-    echo "<td>" . $users[1] . "</td>";//ここにIDを入れたい
-    echo "<td>" . $users[2] . "</td>";
-    echo "<td>" . $lines[1] . "</td>";
-    echo "<td>" . $lines[2] . "</td>";
-    echo '<td>';
-    echo '<form action="texttable.php" method="post">';
-    echo '<input type="hidden" value = "' . $lines[0] . '" name= "id">';
-    echo '<input type ="submit" name = "destroy" value = "削除" >';
-    echo "</form>";
-    echo "</td>";
-    echo '<td>';
-    echo '<form action="textchange.php" method="post">';
-    echo '<input type="hidden" value = "' . $lines[0] . '" name= "id">';
-    echo '<input type ="submit" name = "change" value = "変更" >';
-    echo "</form>";
-    echo "</td>";
-    echo "</tr>";
-  
+  // 自分自身のCSVの内容を表示
+  while ($line = fgets($handle)) {
+	  $line_number++;
+	  // 削除したコメントは非表示にする。-から始まるものが削除されたコメント。
+	  if (preg_match("/^-/", $line)) {
+		  continue;
+	  }
+	  // $linesっていう配列にexplodeでカンマ区切りを指定して　$lineを区切って代入する
+	  $lines = explode(",", $line);
+
+	  $id = $lines[0];
+	  $login_id = "-";
+	  $name = "-";
+	  if (getLoginUser($id)) {
+		  $login_id = getLoginUser($id)["login_id"];
+		  $name = getLoginUser($id)["name"];
+	  }
+	  $comment = $lines[1];
+	  $datetime = $lines[2];
+
+	  echo "<tr>";
+	  echo "<td>" . $login_id . "</td>";
+	  echo "<td>" . $name . "</td>";
+	  echo "<td>" . $comment . "</td>";
+	  echo "<td>" . $datetime . "</td>";
+
+	  echo '<td>';
+	  if ($id == $_SESSION["id"]) {
+		  echo '<form action="comment_change.php" method="post">';
+		  echo '  <input type="hidden" value="' . $line_number . '" name= "line_number">';
+		  echo '  <input type="submit" class="btn btn-success" value="変更" >';
+		  echo "</form>";
+	  }
+	  echo "</td>";
+
+	  echo '<td>';
+	  if ($id == $_SESSION["id"]) {
+		  echo '<form action="comment_delete_done.php" method="post" onClick="return confirm(\'削除しますか？\');">';
+		  echo '  <input type="hidden" value = "' . $line_number . '" name= "line_number">';
+		  echo '  <input type="submit" class="btn btn-danger" value="削除" >';
+		  echo "</form>";
+	  }
+	  echo "</td>";
+
+	  echo "</tr>";
+
   }
   echo "</table>";
 
@@ -208,7 +126,4 @@ if (!empty($_POST['id2']) && !empty($_POST['textchange'])) {
   fclose($handle);
   ?>
 
-
-</body>
-
-</html>
+</div>

@@ -1,75 +1,61 @@
 <?php
+require_once("func/header.php");
+
 //ログインするための画面
 $e = "";
+$t = "";
 session_start();
+
 //ログイン済みかを確認
 if (isset($_SESSION['id'])) {
-  header('Location: top.php'); //ログインしていればtexttable.phpへリダイレクト
-  exit;
+	header('Location: top.php'); //ログインしていればtexttable.phpへリダイレクト
+	exit;
 }
-//ログイン機能
 
-
-
+//ログイン機能 認証
 if (!empty($_POST['userid']) && !empty($_POST['password'])) {
-  // print_r($_POST);
-  // print_r($_SESSION);
-  $userid = $_POST['userid'];
-  $password = $_POST['password'];
-  $user = fopen("csv/user.csv", "r");
-
-  while ($line = fgets($user)) {
-    $users = explode(",", $line);
-    $ids[] = trim($users[1]);
-    $passwords[] = $users[3];
-    // print_r($users[3]);
-    // print_r($users[1]);
-  }
-  fclose($user);
-
-  if (in_array($userid, $ids)) {
-
-    $user = fopen("csv/user.csv", "r");
-    while ($line = fgets($user)) {
-
-      $users = explode(",", $line);
-      if ($users[1] == $userid && trim($users[3]) == $password) {
-        $_SESSION['id'] = $users[0];
-        $_SESSION['name'] = trim($users[2]);
-        $e = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
-        // print_r($users[0]);
-        print_r($_SESSION['id']);
-        print_r($_SESSION['name']);
-        break;
-      } else {
-        $e = "<a href='login.php' style = 'color:red'>パスワードが違います</a>";
-        // break;
-      }
-    }
-    fclose($user);
-  } else {
-    $e = "<a href='login.php' style = 'color:red'>IDが違います</a>";
-  }
+	$userid = $_POST['userid'];
+	$password = $_POST['password'];
+	$user = fopen("csv/user.csv", "r");
+	while ($line = fgets($user)) {
+		$users = explode(",", $line);
+		$ids[] = trim($users[1]);
+		$passwords[] = $users[3];
+	}
+	fclose($user);
+	if (! in_array($userid, $ids)) {
+		$e = "ログイン失敗";
+	}
+	// ログイン認証
+	$user = fopen("csv/user.csv", "r");
+	while ($line = fgets($user)) {
+		$users = explode(",", $line);
+		// IDとパスワードで一致した場合
+		if ($users[1] == $userid && trim($users[3]) == $password) {
+			// ログイン成功とする
+			$_SESSION['id'] = $users[0];
+			$_SESSION['name'] = trim($users[2]);
+			$t = "<a href='top.php' style = 'color:blue'>トップページへ</a>";
+			break;
+		}
+	}
+	if ($t == "") {
+		// IDかパスワードが違う
+		$e = "ログイン失敗";
+	}
+	fclose($user);
 }
-
 
 ?>
-<!DOCTYPE html>
-<html lang="en">
+<title>ログイン</title>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
+<?php if ($e) { ?>
+<div class="alert alert-danger" role="alert"><?php echo $e; ?></div>
+<meta http-equiv="refresh" content="1;URL=login.php">
+<?php } ?>
 
-<body>
-  <?php echo $e; ?>
-  <form action="top.php" method="post">
-    <input type="hidden" value="<?php echo $_POST['userid']; ?>" name="name">
-    <input type="hidden" value="<?php echo $_POST['name']; ?>" name="mail">
-    <input type="hidden" value="<?php echo $_POST['password']; ?>" name="password">
-  </form>
-</body>
+<?php if ($t) { ?>
+<div class="alert alert-primary" role="alert"><?php echo $t; ?></div>
+<meta http-equiv="refresh" content="1;URL=top.php">
+<?php } ?>
 
-</html>
